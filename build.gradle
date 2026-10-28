@@ -1,0 +1,4 @@
+// Proyecto raíz: Subalterno Generalitat Valenciana 81/26
+plugins {
+    id 'com.android.application' version '8.1.4' apply false
+}

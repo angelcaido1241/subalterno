@@ -1,0 +1,48 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.omnibot.subalterno'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.omnibot.subalterno"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    signingConfigs {
+        // Solo se usa si el keystore existe (p. ej. en local).
+        // En GitHub Actions sin keystore se compila en debug, firmado por la
+        // clave de depuracion que genera el propio SDK.
+        release {
+            def ks = file(System.getenv("KS_FILE") ?: "release.jks")
+            if (ks.exists()) {
+                storeFile ks
+                storePassword System.getenv("KS_PASS") ?: "subalterno123"
+                keyAlias System.getenv("KEY_ALIAS") ?: "subalterno"
+                keyPassword System.getenv("KEY_PASS") ?: "subalterno123"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            def ks = file(System.getenv("KS_FILE") ?: "release.jks")
+            if (ks.exists()) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    // UI 100% programatica: sin AndroidX, sin layouts XML, sin dependencias.
+}
